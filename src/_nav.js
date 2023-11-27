@@ -1,43 +1,31 @@
-import React from 'react'
-import CIcon from '@coreui/icons-react'
-import {
-  cilBell,
-  cilCalculator,
-  cilChartPie,
-  cilCursor,
-  cilDescription,
-  cilDrop,
-  cilNotes,
-  cilPencil,
-  cilPuzzle,
-  cilSpeedometer,
-  cilStar,
-} from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import React from "react";
+import CIcon from "@coreui/icons-react";
+import { cilMovie, cilPencil, cilSpeedometer } from "@coreui/icons";
+import { CNavItem, CNavTitle } from "@coreui/react";
 
 const _nav = [
   {
     component: CNavItem,
-    name: 'Dashboard',
-    to: '/dashboard',
+    name: "Dashboard",
+    to: "/dashboard",
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
-    name: 'Moview',
+    name: "Movie",
   },
   {
     component: CNavItem,
-    name: 'Category',
-    to: '/theme/colors',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    name: "Movie",
+    to: "/movie",
+    icon: <CIcon icon={cilMovie} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Audi',
-    to: '/theme/typography',
+    name: "Audi",
+    to: "/theme/typography",
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
-]
+];
 
-export default _nav
+export default _nav;

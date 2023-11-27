@@ -1,67 +1,71 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
-import { login } from '../../../services/Services'
-import { isLoggedIn } from 'src/helpers/IsLoggedIn'
+import React, { useState, useEffect, useRef } from "react";
+import { login } from "../../../services/Services";
+import { useNavigate  } from "react-router-dom";
+
+// import { isLoggedIn } from "src/helpers/IsLoggedIn";
 
 // For Toastr
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Validator Packages
-import SimpleReactValidator from 'simple-react-validator'
+import SimpleReactValidator from "simple-react-validator";
 
-const Login = (props) => {
-  const dispatch = useDispatch()
+const Login = () => {
+
+  const navigate = useNavigate();
 
   // Validator Imports
-  const validator = useRef(new SimpleReactValidator()).current
-  const [, forceUpdate] = useState()
+  const validator = useRef(new SimpleReactValidator()).current;
+  const [, forceUpdate] = useState();
 
   const [state, setState] = useState({
-    email: '',
-    password: '',
-  })
+    email: "sagar@gmail.com",
+    password: "Password@123",
+  });
 
   const handleChange = (e) => {
     setState((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
-    }))
-  }
+    }));
+  };
 
-  useEffect(() => {
-    if (isLoggedIn()) {
-      props.history.push('/dashboard')
-    }
-  }, [props])
+  // useEffect(() => {
+  //   if (isLoggedIn()) {
+  //     props.history.push("/dashboard");
+  //   }
+  // }, [props]);
 
   const handleSubmit = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     if (validator.allValid()) {
-      const email = state.email
-      const password = state.password
+      const email = state.email;
+      const password = state.password;
 
       login(email, password)
         .then((res) => {
-          const response = res.data
+          const response = res.data;
 
-          if (response.success === true) {
-            const token = response.token
-            localStorage.setItem('token', token)
-            //props.history.push('/dashboard')
+          if (response.success) {
+            const token = response.token;
+            localStorage.setItem("token", token);
+            navigate("/dashboard");
           } else {
-            toast.error('Invalid email or Password')
+            toast.error("Invalid email or Password");
           }
         })
         .catch((error) => {
-          toast.error('Failed to communicate with API. Please try again later!')
-        })
+          if (error.response.data.message != undefined)
+            toast.error(error.response.data.message);
+          else toast.error("Login failed");
+        });
     } else {
-      validator.showMessages()
-      forceUpdate(1)
+      validator.showMessages();
+      forceUpdate(1);
     }
-  }
+  };
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -73,7 +77,9 @@ const Login = (props) => {
                 <div className="card-body">
                   <form onSubmit={handleSubmit}>
                     <h4>Movie Ticket Booking System</h4>
-                    <p className="text-muted text-center">Sign in to your account</p>
+                    <p className="text-muted text-center">
+                      Sign in to your account
+                    </p>
                     <div className="input-group mb-3">
                       <div className="input-group-prepend input-icon">
                         <span className="input-group-text">
@@ -89,7 +95,7 @@ const Login = (props) => {
                         name="email"
                         onChange={handleChange}
                       />
-                      {validator.message('email', state.email, 'required')}
+                      {validator.message("email", state.email, "required")}
                     </div>
                     <div className="input-group mb-4">
                       <div className="input-group-prepend input-icon">
@@ -106,11 +112,18 @@ const Login = (props) => {
                         name="password"
                         onChange={handleChange}
                       />
-                      {validator.message('password', state.password, 'required')}
+                      {validator.message(
+                        "password",
+                        state.password,
+                        "required"
+                      )}
                     </div>
                     <div className="row">
                       <div className="col-12">
-                        <button type="submit" className="btn btn-primary px-4 btn-block">
+                        <button
+                          type="submit"
+                          className="btn btn-primary px-4 btn-block"
+                        >
                           Login
                         </button>
                       </div>
@@ -122,8 +135,9 @@ const Login = (props) => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

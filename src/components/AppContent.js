@@ -1,13 +1,14 @@
-import React, { Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import { CContainer, CSpinner } from '@coreui/react'
+import React, { Suspense } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { CContainer, CSpinner } from "@coreui/react";
 
 // routes config
-import routes from '../routes'
+import routes from "../routes";
+import { isLoggedIn } from "../helpers/IsLoggedIn";
 
 const AppContent = () => {
   return (
-    <CContainer lg>
+    <CContainer fluid>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {
@@ -18,16 +19,16 @@ const AppContent = () => {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  element={<route.element />}
+                  element={isLoggedIn() ? <route.element />:<Navigate to="/login"/>}
                 />
               )
-            )
+            );
           })}
           <Route path="/" element={<Navigate to="dashboard" replace />} />
         </Routes>
       </Suspense>
     </CContainer>
-  )
-}
+  );
+};
 
-export default React.memo(AppContent)
+export default React.memo(AppContent);
