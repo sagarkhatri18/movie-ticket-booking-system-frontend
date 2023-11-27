@@ -56,7 +56,6 @@ const Create = () => {
               </textarea>
             </div>
           </div>
-<<<<<<< HEAD
           <div className="form-group">
             <label className="col-md-4 control-label" htmlFor="price">
               Price
@@ -170,7 +169,7 @@ const Create = () => {
           </div>
 
           <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="price">
+            <label className="col-md-4 control-label" htmlFor="rating">
               Rating
             </label>
             <div className="col-md-4">
@@ -183,8 +182,6 @@ const Create = () => {
               />
             </div>
           </div>
-=======
->>>>>>> 9c9fb35054ccb5969bbb6453d17d3e1e1f1fdd12
         </div>
       </div>
     </>

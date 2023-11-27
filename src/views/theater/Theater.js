@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const Theatre = () => {
+const Theater = () => {
   return (
     <>
       <div className="form-group">
@@ -100,4 +100,4 @@ const Theatre = () => {
   );
 };
 
-export default Theatre;
+export default Theater;
