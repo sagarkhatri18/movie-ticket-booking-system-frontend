@@ -56,6 +56,135 @@ const Create = () => {
               </textarea>
             </div>
           </div>
+<<<<<<< HEAD
+          <div className="form-group">
+            <label className="col-md-4 control-label" htmlFor="price">
+              Price
+            </label>
+            <div className="col-md-4">
+              <input
+                id="price"
+                name="price"
+                type="number"
+                placeholder="price"
+                className="form-control input-md"
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="col-md-4 control-label" htmlFor="currency">
+              Currency
+            </label>
+            <div className="col-md-4">
+              <input
+                id="currency"
+                name="currency"
+                type="number"
+                placeholder="CAD/USD"
+                className="form-control input-md"
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="col-md-4 control-label" htmlFor="genre">
+              Genre
+            </label>
+            <div className="col-md-4">
+              <input
+                id="genre"
+                name="genre"
+                type="text"
+                placeholder="Genre"
+                className="form-control input-md"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="theatre_id">
+              Theatre ID
+            </label>
+            <div class="col-md-4">
+              <select id="theatre_id" name="theatre_id" class="form-control">
+                <option value="1">Option one</option>
+                <option value="2">Option two</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="col-md-4 control-label" htmlFor="realese_year">
+              Realese Year
+            </label>
+            <div className="col-md-4">
+              <input
+                id="realese_year"
+                name="realese_year"
+                type="date"
+                placeholder=""
+                className="form-control input-md"
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="col-md-4 control-label" htmlFor="play_time">
+              Play Time
+            </label>
+            <div className="col-md-4">
+              <input
+                id="play_time"
+                name="play_time"
+                type="text"
+                placeholder=""
+                className="form-control input-md"
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="col-md-4 control-label" htmlFor="director">
+              Director
+            </label>
+            <div className="col-md-4">
+              <input
+                id="director"
+                name="director"
+                type="text"
+                placeholder="Enter the movie director "
+                className="form-control input-md"
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="col-md-4 control-label" htmlFor="star_cast">
+              Star Cast
+            </label>
+            <div className="col-md-4">
+              <input
+                id="star_cast"
+                name="star_cast"
+                type="text"
+                placeholder=""
+                className="form-control input-md"
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="col-md-4 control-label" htmlFor="price">
+              Rating
+            </label>
+            <div className="col-md-4">
+              <input
+                id="rating"
+                name="rating"
+                type="number"
+                placeholder=""
+                className="form-control input-md"
+              />
+            </div>
+          </div>
+=======
+>>>>>>> 9c9fb35054ccb5969bbb6453d17d3e1e1f1fdd12
         </div>
       </div>
     </>
