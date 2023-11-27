@@ -145,3 +145,6 @@
 .radio-inline {
     margin-right: 20px;
 }
+.radio-inline > input[type="radio"] {
+    margin-right: 3px;
+}
