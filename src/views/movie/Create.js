@@ -1,188 +1,317 @@
-import React from "react";
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+// Validator Packages
+import SimpleReactValidator from "simple-react-validator";
+import { createMovie } from "./Service";
+import { Error } from "../../helpers/Error";
+import { toast } from "react-toastify";
 
 const Create = () => {
+  const navigate = useNavigate();
+
+  // set state
+  const [state, setState] = useState({
+    title: "",
+    status: "",
+    description: "",
+    price: "",
+    currency: "CAD",
+    genre: "ACTION",
+    theatre_id: "",
+    release_year: "",
+    play_time: "",
+    director: "",
+    star_casts: "",
+    rating: "",
+  });
+
+  const [error, setError] = useState("");
+
+  // Validator Imports
+  const validator = useRef(new SimpleReactValidator()).current;
+  const [, forceUpdate] = useState();
+
+  // handle input fields onchange value
+  const handleChange = (e) => {
+    setState((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  // handle form submit
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (validator.allValid()) {
+      createMovie(state)
+        .then((data) => {
+          navigate("/movie");
+          toast.success(data.data.message);
+        })
+        .catch((error) => {
+          setError(error.response.data);
+          toast.error("Error occured while sending data");
+        });
+    } else {
+      validator.showMessages();
+      forceUpdate(1);
+    }
+  };
+
+  const movieGenre = [
+    "ACTION",
+    "ADVENTURE",
+    "ANIMATION",
+    "COMEDY",
+    "DRAMA",
+    "HORROR",
+    "SCIFI",
+    "THRILLER",
+    "ROMANCE",
+  ];
+
   return (
     <>
       <div className="row">
-        <div className="col-12">
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="Title">
-              Movie Title
-            </label>
-            <div className="col-md-4">
-              <input
-                id="title"
-                name="title"
-                type="text"
-                placeholder="Movie Title"
-                className="form-control input-md"
-                required=""
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="status">
-              Status
-            </label>
-            <div className="col-md-4">
-              <label className="radio-inline" htmlFor="status-0">
+        <Error errors={error} />
+        <form onSubmit={handleSubmit}>
+          <div className="col-12">
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="title">
+                Movie Title
+              </label>
+              <div className="col-md-4">
                 <input
-                  type="radio"
-                  name="status"
-                  id="status-0"
-                  value="1"
-                  checked="checked"
+                  id="title"
+                  name="title"
+                  type="text"
+                  placeholder="Enter the movie title here"
+                  className="form-control input-md"
+                  onChange={handleChange}
                 />
-                Active
+                {validator.message("movie title", state.title, "required")}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="status">
+                Status
               </label>
-              <label className="radio-inline" htmlFor="status-1">
-                <input type="radio" name="status" id="status-1" value="0" />
-                Inactive
+              <div className="col-md-4">
+                <label className="radio-inline" htmlFor="status">
+                  <input
+                    type="radio"
+                    name="status"
+                    id="status-0"
+                    value="1"
+                    checked="checked"
+                    onChange={handleChange}
+                  />
+                  Active
+                </label>
+                <label className="radio-inline" htmlFor="status">
+                  <input
+                    type="radio"
+                    name="status"
+                    id="status-1"
+                    value="0"
+                    onChange={handleChange}
+                  />
+                  Inactive
+                </label>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="description">
+                Description
               </label>
+              <div className="col-md-4">
+                <textarea
+                  className="form-control"
+                  id="description"
+                  name="description"
+                  placeholder="Add movie description here"
+                  onChange={handleChange}
+                ></textarea>
+              </div>
             </div>
-          </div>
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="description">
-              Description
-            </label>
-            <div className="col-md-4">
-              <textarea
-                className="form-control"
-                id="description"
-                name="description"
-              >
-                Add movie description here
-              </textarea>
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="price">
+                Price
+              </label>
+              <div className="col-md-4">
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  placeholder="Price"
+                  min={1}
+                  onChange={handleChange}
+                  className="form-control input-md"
+                />
+                {validator.message("movie price", state.price, "required")}
+              </div>
             </div>
-          </div>
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="price">
-              Price
-            </label>
-            <div className="col-md-4">
-              <input
-                id="price"
-                name="price"
-                type="number"
-                placeholder="price"
-                className="form-control input-md"
-              />
-            </div>
-          </div>
 
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="currency">
-              Currency
-            </label>
-            <div className="col-md-4">
-              <input
-                id="currency"
-                name="currency"
-                type="number"
-                placeholder="CAD/USD"
-                className="form-control input-md"
-              />
-            </div>
-          </div>
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="currency">
+                Currency
+              </label>
 
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="genre">
-              Genre
-            </label>
-            <div className="col-md-4">
-              <input
-                id="genre"
-                name="genre"
-                type="text"
-                placeholder="Genre"
-                className="form-control input-md"
-              />
+              <div className="col-md-4">
+                <select
+                  id="currency"
+                  name="currency"
+                  className="form-control"
+                  onChange={handleChange}
+                >
+                  <option value="CAD" key="CAD">CAD</option>
+                  <option value="USD" key="USD">USD</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-4 control-label" for="theatre_id">
-              Theatre ID
-            </label>
-            <div class="col-md-4">
-              <select id="theatre_id" name="theatre_id" class="form-control">
-                <option value="1">Option one</option>
-                <option value="2">Option two</option>
-              </select>
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="realese_year">
-              Realese Year
-            </label>
-            <div className="col-md-4">
-              <input
-                id="realese_year"
-                name="realese_year"
-                type="date"
-                placeholder=""
-                className="form-control input-md"
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="play_time">
-              Play Time
-            </label>
-            <div className="col-md-4">
-              <input
-                id="play_time"
-                name="play_time"
-                type="text"
-                placeholder=""
-                className="form-control input-md"
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="director">
-              Director
-            </label>
-            <div className="col-md-4">
-              <input
-                id="director"
-                name="director"
-                type="text"
-                placeholder="Enter the movie director "
-                className="form-control input-md"
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="star_cast">
-              Star Cast
-            </label>
-            <div className="col-md-4">
-              <input
-                id="star_cast"
-                name="star_cast"
-                type="text"
-                placeholder=""
-                className="form-control input-md"
-              />
-            </div>
-          </div>
 
-          <div className="form-group">
-            <label className="col-md-4 control-label" htmlFor="rating">
-              Rating
-            </label>
-            <div className="col-md-4">
-              <input
-                id="rating"
-                name="rating"
-                type="number"
-                placeholder=""
-                className="form-control input-md"
-              />
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="genre">
+                Genre
+              </label>
+              <div className="col-md-4">
+                <select
+                  id="genre"
+                  name="genre"
+                  className="form-control"
+                  onChange={handleChange}
+                >
+                  {movieGenre.map((genre) => (
+                    <option value={genre} key={genre}>{genre}</option>
+                  ))}
+                </select>
+                {validator.message("movie genre", state.genre, "required")}
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="theatre_id">
+                Theatre
+              </label>
+              <div className="col-md-4">
+                <select
+                  id="theatre_id"
+                  name="theatre_id"
+                  className="form-control"
+                  onChange={handleChange}
+                >
+                  <option value="1">Option one</option>
+                  <option value="2">Option two</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="release_year">
+                Realese Year
+              </label>
+              <div className="col-md-4">
+                <input
+                  type="number"
+                  id="release_year"
+                  className="form-control input-md"
+                  name="release_year"
+                  max={new Date().getFullYear()}
+                  min="1900"
+                  step="1"
+                  onChange={handleChange}
+                />
+                {validator.message(
+                  "movie release year",
+                  state.release_year,
+                  "required|numeric"
+                )}
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="play_time">
+                Play Time
+              </label>
+              <div className="col-md-4">
+                <input
+                  id="play_time"
+                  name="play_time"
+                  type="text"
+                  placeholder="Enter the movie play time"
+                  className="form-control input-md"
+                  onChange={handleChange}
+                />
+                {validator.message(
+                  "movie play time",
+                  state.play_time,
+                  "required"
+                )}
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="director">
+                Director
+              </label>
+              <div className="col-md-4">
+                <input
+                  id="director"
+                  name="director"
+                  type="text"
+                  placeholder="Enter the movie director"
+                  className="form-control input-md"
+                  onChange={handleChange}
+                />
+                {validator.message("director", state.director, "required")}
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="star_casts">
+                Star Cast
+              </label>
+              <div className="col-md-4">
+                <input
+                  id="star_casts"
+                  name="star_casts"
+                  type="text"
+                  placeholder="Enter the movie star casts here"
+                  className="form-control input-md"
+                  onChange={handleChange}
+                />
+                {validator.message("star casts", state.star_casts, "required")}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="col-md-4 control-label" htmlFor="rating">
+                Rating
+              </label>
+              <div className="col-md-4">
+                <input
+                  id="rating"
+                  name="rating"
+                  type="number"
+                  min="1"
+                  max="10"
+                  placeholder="Enter the movie rating here"
+                  className="form-control input-md"
+                  onChange={handleChange}
+                />
+                {validator.message(
+                  "movie rating",
+                  state.rating,
+                  "required|numeric"
+                )}
+              </div>
             </div>
           </div>
-        </div>
+          <div className="col-12">
+            <div className="form-group">
+              <button type="submit" className="btn btn-md btn-primary">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </>
   );
