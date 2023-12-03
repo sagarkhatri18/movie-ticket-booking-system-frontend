@@ -1,6 +1,6 @@
 import React from "react";
 import CIcon from "@coreui/icons-react";
-import { cilMovie, cilPencil, cilSpeedometer } from "@coreui/icons";
+import { cilMovie,cibTreehouse, cilPencil, cilSpeedometer } from "@coreui/icons";
 import { CNavItem, CNavTitle } from "@coreui/react";
 
 const _nav = [
@@ -19,6 +19,12 @@ const _nav = [
     name: "Movie",
     to: "/movie",
     icon: <CIcon icon={cilMovie} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Theater",
+    to: "/theater",
+    icon: <CIcon icon={cibTreehouse} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,

@@ -5,7 +5,7 @@ const Movie = React.lazy(() => import('./views/movie/Movie'))
 const MovieCreate = React.lazy(() => import('./views/movie/Create'))
 const MovieUpdate = React.lazy(() => import('./views/movie/Update'))
 const Booking = React.lazy(() => import('./views/booking/Booking'))
-const Theater = React.lazy(() => import('./views/theater/Theater'))
+const Theater = React.lazy(() => import('./views/theaterc/Theater'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
