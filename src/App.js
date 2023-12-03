@@ -2,6 +2,14 @@ import React, { Component, Suspense } from "react";
 import { HashRouter, Route, Routes, Navigate } from "react-router-dom";
 import "./scss/style.scss";
 import { isLoggedIn } from "src/helpers/IsLoggedIn";
+import alertify from "alertifyjs";
+import "alertifyjs/build/css/alertify.css";
+
+//override defaults of alertifyjs
+alertify.defaults.transition = "slide";
+alertify.defaults.theme.ok = "btn btn-sm btn-primary";
+alertify.defaults.theme.cancel = "btn btn-sm btn-danger";
+alertify.defaults.theme.input = "form-control";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -23,7 +31,12 @@ class App extends Component {
       <HashRouter>
         <Suspense fallback={loading}>
           <Routes>
-            <Route exact path="/login" name="Login Page" element={isLoggedIn()?<Navigate to="/" />:<Login />} />
+            <Route
+              exact
+              path="/login"
+              name="Login Page"
+              element={isLoggedIn() ? <Navigate to="/" /> : <Login />}
+            />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
             <Route path="*" name="Home" element={<DefaultLayout />} />
