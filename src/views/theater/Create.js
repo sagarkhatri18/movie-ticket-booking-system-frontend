@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
-import { createMovie } from "./Service";
+import { createTheater } from "./Service";
 import { Error } from "../../helpers/Error";
 import { toast } from "react-toastify";
 

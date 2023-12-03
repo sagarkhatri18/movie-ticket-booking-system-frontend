@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { NavLink } from "react-router-dom";
-import { getMovies } from "./Service";
+import { getTheater } from "./Service";
 
 const Theater = () => {
   const [theaters, setTheater] = useState([]);
