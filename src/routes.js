@@ -15,7 +15,7 @@ const routes = [
   { path: "/movie", name: "Movie", element: Movie },
   { path: "/movie/create", name: "Create", element: MovieCreate },
   { path: "/movie/update/:id", name: "Update", element: MovieUpdate },
-  { path: "/booking", name: "Booking", element: Booking },
+  { path: "/booking", name: "Movie Booking", element: Booking },
   { path: "/theatre", name: "Theatre", element: Theatre },
   { path: "/theatre/create", name: "Theatre Create", element: TheatreCreate },
   {
