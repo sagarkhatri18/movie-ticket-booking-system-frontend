@@ -229,6 +229,7 @@ const Create = () => {
                     max={new Date().getFullYear()}
                     min="1900"
                     step="1"
+                    placeholder="Enter the movie release year"
                     onChange={handleChange}
                   />
                   {validator.message(
