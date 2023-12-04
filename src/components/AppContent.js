@@ -5,6 +5,8 @@ import { CContainer, CSpinner } from "@coreui/react";
 // routes config
 import routes from "../routes";
 import { isLoggedIn } from "../helpers/IsLoggedIn";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AppContent = () => {
   return (
@@ -19,7 +21,9 @@ const AppContent = () => {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  element={isLoggedIn() ? <route.element />:<Navigate to="/login"/>}
+                  element={
+                    isLoggedIn() ? <route.element /> : <Navigate to="/login" />
+                  }
                 />
               )
             );
@@ -27,6 +31,7 @@ const AppContent = () => {
           <Route path="/" element={<Navigate to="dashboard" replace />} />
         </Routes>
       </Suspense>
+      <ToastContainer />
     </CContainer>
   );
 };

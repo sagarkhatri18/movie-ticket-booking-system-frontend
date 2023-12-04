@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
 import { updateMovie, findMovie } from "./Service";
+import { getActiveTheatres } from "../theatre/Service";
 import { Error } from "../../helpers/Error";
 import { toast } from "react-toastify";
 
@@ -26,6 +27,7 @@ const Update = () => {
     rating: "",
   });
 
+  const [theatres, setTheatres] = useState([]);
   const [error, setError] = useState("");
 
   // Validator Imports
@@ -44,7 +46,7 @@ const Update = () => {
   const handleChangeRadio = (e) => {
     setState((prevState) => ({
       ...prevState,
-      [e.target.name]: (e.target.value == "1")?true:false,
+      [e.target.name]: e.target.value == "1" ? true : false,
     }));
   };
 
@@ -80,11 +82,24 @@ const Update = () => {
     "ROMANCE",
   ];
 
+  // load theatres details
+  const loadTheatres = async () => {
+    await getActiveTheatres()
+      .then((data) => {
+        const apiResponse = data.data;
+        setTheatres(apiResponse);
+      })
+      .catch((error) => {
+        toast.error("Error occured while fetching data");
+      });
+  };
+
   // find movie from id
   const findMovieFromId = useCallback(() => {
     findMovie(params.id)
       .then((data) => {
         const returnData = data.data.data;
+        loadTheatres();
         setState(returnData);
       })
       .catch((error) => {
@@ -237,11 +252,23 @@ const Update = () => {
                     id="theatre_id"
                     name="theatre_id"
                     className="form-control"
+                    value={state.theatre_id}
                     onChange={handleChange}
                   >
-                    <option value="1">Option one</option>
-                    <option value="2">Option two</option>
+                    <option value="" disabled={true}>
+                      Select one
+                    </option>
+                    {theatres.map((theatre) => {
+                      return (
+                        <option value={theatre._id} key={theatre._id}>
+                          {theatre.title}
+                        </option>
+                      );
+                    })}
+                    {/* <option value="1">Option one</option>
+                    <option value="2">Option two</option> */}
                   </select>
+                  {validator.message("movie theatre", state.theatre_id, "required")}
                 </div>
               </div>
               <div className="form-group">

@@ -45,6 +45,11 @@ export const getTheatres = async () => {
   return axios.get(process.env.REACT_APP_API_URL + `theatre`, config);
 };
 
+// list only active theatres
+export const getActiveTheatres = async () => {
+  return axios.get(process.env.REACT_APP_API_URL + `theatre/active/lists`, config);
+};
+
 // get specific theatre from id
 export const findTheatre = async (id) => {
   return axios.get(process.env.REACT_APP_API_URL + `theatre/${id}`, config);
