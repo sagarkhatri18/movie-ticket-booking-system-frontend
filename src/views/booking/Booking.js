@@ -1,127 +1,241 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import { render } from 'react-dom';
+import styles from '../../scss/theater.scss'
+
+import React, { useState } from "react";
+
 
 const Booking = () => {
+
+  const [seat, setSeat] = useState(Array(10).fill().map(_ => Array(25).fill(false)));
+  const [booked, setBooked] = useState([211, 325, 615,,616,617,618, 1011, 922,923, 924])
+  const [reserveSeat, setReserveSeat] = useState({})
+
+  const checkIsBooked = ((row, seat)=>{
+    let bookedSeat = String(row)+String(seat)
+    if(booked.includes(parseInt(bookedSeat)))
+      return true
+    return false
+  })
+
+  const handleSeatClick = (row, index) => {
+    console.log(row, index)
+    // Create a new array to avoid mutating the state directly
+    const newSeats = [...seat];
+    newSeats[row][index] = !newSeats[row][index] 
+   
+  
+    setSeat(newSeats);
+  };
+
+
+
+
   return (
     <>
-      <div className="form-group">
-        <label className="col-md-4 control-label" htmlFor="id">
+
+
+
+
+      <div className='container'>
+        <div className='row'>
+          <ul className="showcase ">
+            <li>
+              <div className="seat"></div>
+              <small>Available</small>
+            </li>
+            <li>
+              <div className="seat selected"></div>
+              <small>Selected</small>
+            </li>
+            <li>
+              <div className="seat sold"></div>
+              <small>Sold</small>
+            </li>
+          </ul>
+        </div>
+        <div className="row" >
+          <div className="screen"></div>
+                  {/* 
+                  <div key={ii+1} className="seat sold"></div> */}
+
+                 {
+                   seat.map((col, row)=>{
+                    return (
+                      <div className="row" key={row}>
+                      {
+                        col.map((isReserved, i)=>{
+                            return(
+                              <>
+                              {
+                               checkIsBooked(row+1,i+1) ? (
+                                <div  className="seat sold" key={i}></div>
+
+                               ):(
+
+                                <div  onClick={() => handleSeatClick(row, i)}   className={`seat ${isReserved ? 'selected' : ''}`} key={i}></div>
+                               ) 
+                              }
+                              </>
+                            
+                            )
+                        })
+                        
+                      }
+                        
+                      </div>
+                    )
+                  })
+                 }
+
+          {/* {
+            [...Array(row)].map((e, i) => {
+                
+              return (
+                <div className="row" key={i+1}>
+                  {
+
+seat.map((isReserved, ii) => {
+                      return (
+                        <>
+                        {checkIsBooked(i+1,ii+1) ? (
+                          <div key={ii+1} className="seat sold"></div>
+                        ) : (
+                          <div key={ii+1} 
+                          className={`seat ${isReserved} ? "selected" : ""}`} 
+                          onClick={()=>handleSeatClick(i+1, ii+1)}></div>
+                        )}
+                        </>
+                        
+                      )
+                    })
+                  }
+                </div>
+              )
+            })
+          }  */}
+
+
+        </div>
+      </div>
+
+      {/* <div classNameName="form-group">
+        <label classNameName="col-md-4 control-label" htmlFor="id">
           ID
         </label>
-        <div className="col-md-4">
+        <div classNameName="col-md-4">
           <input
             id="id"
             name="id"
             type="text"
             placeholder=""
-            className="form-control input-md"
+            classNameName="form-control input-md"
             required=""
           />
         </div>
       </div>
-      <div className="form-group">
-        <label className="col-md-4 control-label" htmlFor="name">
+      <div classNameName="form-group">
+        <label classNameName="col-md-4 control-label" htmlFor="name">
           Name
         </label>
-        <div className="col-md-4">
+        <div classNameName="col-md-4">
           <input
             id="name"
             name="name"
             type="text"
             placeholder=""
-            className="form-control input-md"
+            classNameName="form-control input-md"
           />
         </div>
       </div>
 
-      <div className="form-group">
-        <label className="col-md-4 control-label" htmlFor="email">
+      <div classNameName="form-group">
+        <label classNameName="col-md-4 control-label" htmlFor="email">
           Email
         </label>
-        <div className="col-md-4">
+        <div classNameName="col-md-4">
           <input
             id="email"
             name="email"
             type="text"
             placeholder=""
-            className="form-control input-md"
+            classNameName="form-control input-md"
           />
         </div>
       </div>
 
-      <div className="form-group">
-        <label className="col-md-4 control-label" htmlFor="phone">
+      <div classNameName="form-group">
+        <label classNameName="col-md-4 control-label" htmlFor="phone">
           Phone Number
         </label>
-        <div className="col-md-4">
+        <div classNameName="col-md-4">
           <input
             id="phone"
             name="phone"
             type="number"
             placeholder=""
-            className="form-control input-md"
+            classNameName="form-control input-md"
           />
         </div>
       </div>
 
-      <div className="form-group">
-        <label className="col-md-4 control-label" htmlFor="quantity">
+      <div classNameName="form-group">
+        <label classNameName="col-md-4 control-label" htmlFor="quantity">
           Quantity
         </label>
-        <div className="col-md-4">
+        <div classNameName="col-md-4">
           <input
             id="quantity"
             name="quantity"
             type="number"
             placeholder=""
-            className="form-control input-md"
+            classNameName="form-control input-md"
           />
         </div>
       </div>
-      <div className="form-group">
-        <label className="col-md-4 control-label" htmlFor="sub_total">
+      <div classNameName="form-group">
+        <label classNameName="col-md-4 control-label" htmlFor="sub_total">
           Sub Total
         </label>
-        <div className="col-md-4">
+        <div classNameName="col-md-4">
           <input
             id="sub_total"
             name="sub_total"
             type="number"
             placeholder=""
-            className="form-control input-md"
+            classNameName="form-control input-md"
           />
         </div>
       </div>
 
-      <div className="form-group">
-        <label className="col-md-4 control-label" htmlFor="tax">
+      <div classNameName="form-group">
+        <label classNameName="col-md-4 control-label" htmlFor="tax">
           Tax
         </label>
-        <div className="col-md-4">
+        <div classNameName="col-md-4">
           <input
             id="tax"
             name="tax"
             type="number"
             placeholder=""
-            className="form-control input-md"
+            classNameName="form-control input-md"
           />
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="col-md-4 control-label" for="total">
+      <div className="form-group">
+        <label className="col-md-4 control-label" for="total">
           Total
         </label>
-        <div class="col-md-4">
+        <div className="col-md-4">
           <input
             id="total"
             name="total"
             type="number"
             placeholder=""
-            className="form-control input-md"
+            classNameName="form-control input-md"
           />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
