@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { searchMovie } from "./Service";
 import { toast } from "react-toastify";
-import { findTheatre } from "../theatre/Service";
+import { NavLink } from "react-router-dom";
 
 const MovieSearch = () => {
   // set state
@@ -104,9 +104,11 @@ const MovieSearch = () => {
                               </span>
                               <br></br>
                             </p>
-                            <a href="#" className="btn btn-primary">
-                              Book Now <i className="fa fa-arrow-right"></i>
-                            </a>
+                            <NavLink to={`/movie/booking/${movie._id}`}>
+                              <button className="btn btn-primary">
+                                Book Now <i className="fa fa-arrow-right"></i>
+                              </button>
+                            </NavLink>
                           </div>
                         </div>
                       </div>

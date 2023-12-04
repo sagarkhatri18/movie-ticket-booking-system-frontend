@@ -10,5 +10,5 @@ export const login = async (email, password) => {
 
 export const Logout = () => {
   localStorage.clear();
-  // window.location.href = "#/";
+  window.location.reload()
 };
