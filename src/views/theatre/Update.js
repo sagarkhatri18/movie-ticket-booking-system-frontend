@@ -65,7 +65,7 @@ const Update = () => {
   const findTheatreFromId = useCallback(() => {
     findTheatre(params.id)
       .then((data) => {
-        const returnData = data.data.data;
+        const returnData = data.data;
         setState(returnData);
       })
       .catch((error) => {

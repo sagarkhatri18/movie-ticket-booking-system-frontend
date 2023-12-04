@@ -69,11 +69,11 @@ const Theatre = () => {
     return (
       <>
         <div className="d-inline-flex">
-          <NavLink to={`/theatre/update/${theatre._id}`}>
+          <NavLink to={`/theatre/update/${theatre.id}`}>
             <Button type="button" icon="pi pi-pencil" rounded></Button>
           </NavLink>
           <Button
-            onClick={() => deleteTheatre(theatre._id)}
+            onClick={() => deleteTheatre(theatre.id)}
             type="button"
             icon="pi pi-trash"
             className="btn btn-danger"
