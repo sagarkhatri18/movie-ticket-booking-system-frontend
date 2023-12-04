@@ -20,8 +20,8 @@ const Login = () => {
   const [, forceUpdate] = useState();
 
   const [state, setState] = useState({
-    email: "sagar@gmail.com",
-    password: "Password@123",
+    email: "admin@mticket.com",
+    password: "admin@123",
   });
 
   const handleChange = (e) => {
@@ -47,8 +47,7 @@ const Login = () => {
       login(email, password)
         .then((res) => {
           const response = res.data;
-
-          if (response.success) {
+          if (response.token) {
             const token = response.token;
             localStorage.setItem("token", token);
             navigate("/dashboard");

@@ -84,7 +84,8 @@ const Update = () => {
   const findMovieFromId = useCallback(() => {
     findMovie(params.id)
       .then((data) => {
-        const returnData = data.data.data;
+        const returnData = data.data;
+        console.log(returnData)
         setState(returnData);
       })
       .catch((error) => {

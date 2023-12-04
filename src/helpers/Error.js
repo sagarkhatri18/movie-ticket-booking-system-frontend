@@ -10,7 +10,7 @@ export const Error = (props) => {
         <div className="alert alert-danger fade show form-error" role="alert">
           <ul className="error-ul">
             {Object.keys(props.errors).map((err, index) => (
-              <li key={index}>{props.errors[err][0]}</li>
+              <li key={index}>{`${err.toUpperCase()} - ${props.errors[err]}`}</li>
             ))}
           </ul>
         </div>

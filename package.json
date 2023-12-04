@@ -7,6 +7,7 @@
     "type": "git",
     "url": "git@github.com:sagarkhatri18/movie-ticket-booking-system-frontend.git"
   },
+  "proxy": "http://localhost:8080",
   "license": "MIT",
   "author": "Sagar Khatri, Ranjit Neupane, Pankaj Thakur, Basanta Shahi and Arun Aryal",
   "scripts": {

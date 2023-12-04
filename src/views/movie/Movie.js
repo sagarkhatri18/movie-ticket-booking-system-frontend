@@ -70,14 +70,15 @@ const Movie = () => {
   };
 
   const actionBodyTemplate = (movie) => {
+    console.log(movie)
     return (
       <>
         <div className="d-inline-flex">
-          <NavLink to={`/movie/update/${movie._id}`}>
+          <NavLink to={`/movie/update/${movie.id}`}>
             <Button type="button" icon="pi pi-pencil" rounded></Button>
           </NavLink>
           <Button
-            onClick={() => deleteMovie(movie._id)}
+            onClick={() => deleteMovie(movie.id)}
             type="button"
             icon="pi pi-trash"
             className="btn btn-danger"
