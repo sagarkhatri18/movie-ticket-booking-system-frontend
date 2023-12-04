@@ -1,39 +1,48 @@
-import { render } from 'react-dom';
-import styles from '../../scss/theater.scss'
+import { render } from "react-dom";
+import styles from "../../scss/theater.scss";
 
 import React, { useState } from "react";
 
-
 const Booking = () => {
+  const [seat, setSeat] = useState(
+    Array(10)
+      .fill()
+      .map((_) => Array(25).fill(false))
+  );
+  const [booked, setBooked] = useState([
+    211,
+    325,
+    615,
+    ,
+    616,
+    617,
+    618,
+    1011,
+    922,
+    923,
+    924,
+  ]);
+  const [reserveSeat, setReserveSeat] = useState({});
 
-  const [seat, setSeat] = useState(Array(10).fill().map(_ => Array(25).fill(false)));
-  const [booked, setBooked] = useState([211, 325, 615, , 616, 617, 618, 1011, 922, 923, 924])
-  const [reserveSeat, setReserveSeat] = useState({})
-
-  const checkIsBooked = ((row, seat) => {
-    let bookedSeat = String(row) + String(seat)
-    if (booked.includes(parseInt(bookedSeat)))
-      return true
-    return false
-  })
+  const checkIsBooked = (row, seat) => {
+    let bookedSeat = String(row) + String(seat);
+    if (booked.includes(parseInt(bookedSeat))) return true;
+    return false;
+  };
 
   const handleSeatClick = (row, index) => {
-    console.log(row, index)
+    console.log(row, index);
     // Create a new array to avoid mutating the state directly
     const newSeats = [...seat];
-    newSeats[row][index] = !newSeats[row][index]
-
+    newSeats[row][index] = !newSeats[row][index];
 
     setSeat(newSeats);
   };
 
-
-
-
   return (
     <>
-      <div className='container'>
-        <div className='row'>
+      <div className="container">
+        <div className="row">
           <ul className="showcase ">
             <li>
               <div className="seat"></div>
@@ -49,47 +58,36 @@ const Booking = () => {
             </li>
           </ul>
         </div>
-        <div className="row" >
-
+        <div className="row">
           <div className="screen"></div>
           {/* 
                   <div key={ii+1} className="seat sold"></div> */}
 
-          {
-            seat.map((col, row) => {
-              return (
-                <div className="row" key={row}>
-                  {
-                    col.map((isReserved, i) => {
-                      return (
-                        <>
-                          {
-                            checkIsBooked(row + 1, i + 1) ? (
-                              <div className="seat sold" key={i}></div>
-
-                            ) : (
-
-                              <div onClick={() => handleSeatClick(row, i)} className={`seat ${isReserved ? 'selected' : ''}`} key={i}></div>
-                            )
-                          }
-                        </>
-
-                      )
-                    })
-
-                  }
-
-                </div>
-              )
-            })
-          }
-
-
-
+          {seat.map((col, row) => {
+            return (
+              <div className="row" key={row}>
+                {col.map((isReserved, i) => {
+                  return (
+                    <>
+                      {checkIsBooked(row + 1, i + 1) ? (
+                        <div className="seat sold" key={i}></div>
+                      ) : (
+                        <div
+                          onClick={() => handleSeatClick(row, i)}
+                          className={`seat ${isReserved ? "selected" : ""}`}
+                          key={i}
+                        ></div>
+                      )}
+                    </>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
 
-        <div className='row mt-md-2'>
-          <div className='card p-5'>
+        <div className="row mt-md-2">
+          <div className="card p-5">
             <div className="form-group">
               <label className="col-md-6 control-label" htmlFor="name">
                 Name
@@ -192,19 +190,16 @@ const Booking = () => {
                   className="form-control input-md"
                 />
               </div>
-              
             </div>
 
             <div className="form-group">
-              <button className='btn btn-success text-white'>Save</button>
-              
+              <button className="btn btn-success text-white">Save</button>
             </div>
           </div>
         </div>
       </div>
 
-      {
-      }
+      {}
     </>
   );
 };

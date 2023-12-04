@@ -8,13 +8,17 @@ const Booking = React.lazy(() => import("./views/booking/Booking"));
 const Theatre = React.lazy(() => import("./views/theatre/Theatre"));
 const TheatreCreate = React.lazy(() => import("./views/theatre/Create"));
 const TheatreUpdate = React.lazy(() => import("./views/theatre/Update"));
+const MovieSearch = React.lazy(() => import("./views/movie/Search"));
+const MovieBooking = React.lazy(() => import("./views/booking/Create"));
 
 const routes = [
   { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
   { path: "/movie", name: "Movie", element: Movie },
+  { path: "/movie-search", name: "Movie Search", element: MovieSearch },
   { path: "/movie/create", name: "Create", element: MovieCreate },
   { path: "/movie/update/:id", name: "Update", element: MovieUpdate },
+  { path: "/movie/booking/:id", name: "Movie Booking", element: MovieBooking },
   { path: "/booking", name: "Movie Booking", element: Booking },
   { path: "/theatre", name: "Theatre", element: Theatre },
   { path: "/theatre/create", name: "Theatre Create", element: TheatreCreate },

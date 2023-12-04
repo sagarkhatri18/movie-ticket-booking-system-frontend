@@ -21,12 +21,12 @@ export const createMovie = async (data) => {
     star_casts: data.star_casts,
     rating: data.rating,
   };
-  return axios.post(process.env.REACT_APP_API_URL + `movie`, formData, config);
+  return await axios.post(process.env.REACT_APP_API_URL + `movie`, formData, config);
 };
 
 // list all the movies
 export const getMovies = async () => {
-  return axios.get(process.env.REACT_APP_API_URL + `movie`, config);
+  return await axios.get(process.env.REACT_APP_API_URL + `movie`, config);
 };
 
 // update the movie
@@ -46,7 +46,7 @@ export const updateMovie = async (id, data) => {
     rating: data.rating,
   };
 
-  return axios.put(
+  return await axios.put(
     process.env.REACT_APP_API_URL + `movie/${id}`,
     formData,
     config
@@ -55,10 +55,15 @@ export const updateMovie = async (id, data) => {
 
 // get specific movie from id
 export const findMovie = async (id) => {
-  return axios.get(process.env.REACT_APP_API_URL + `movie/${id}`, config);
+  return await axios.get(process.env.REACT_APP_API_URL + `movie/${id}`, config);
 };
 
 // delete the particular movie
 export const deleteMovieFromId = async (id) => {
-  return axios.delete(process.env.REACT_APP_API_URL + `movie/${id}`, config)
+  return await axios.delete(process.env.REACT_APP_API_URL + `movie/${id}`, config)
 }
+
+// search movie from movie's title
+export const searchMovie = async (title) => {
+  return await axios.get(process.env.REACT_APP_API_URL + `movie/search/${title}`, config);
+};

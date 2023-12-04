@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
 import { createMovie } from "./Service";
+import { getActiveTheatres } from "../theatre/Service";
 import { Error } from "../../helpers/Error";
 import { toast } from "react-toastify";
 
@@ -24,6 +25,8 @@ const Create = () => {
     star_casts: "",
     rating: "",
   });
+
+  const [theatres, setTheatres] = useState([]);
 
   const [error, setError] = useState("");
 
@@ -58,6 +61,22 @@ const Create = () => {
       forceUpdate(1);
     }
   };
+
+  // load theatres details
+  const loadTheatres = useCallback(() => {
+    getActiveTheatres()
+      .then((data) => {
+        const apiResponse = data.data;
+        setTheatres(apiResponse);
+      })
+      .catch((error) => {
+        toast.error("Error occured while fetching data");
+      });
+  });
+
+  useEffect(() => {
+    loadTheatres();
+  }, [loadTheatres]);
 
   const movieGenre = [
     "ACTION",
@@ -207,10 +226,24 @@ const Create = () => {
                     name="theatre_id"
                     className="form-control"
                     onChange={handleChange}
+                    defaultValue={""}
                   >
-                    <option value="1">Option one</option>
-                    <option value="2">Option two</option>
+                    <option value="" disabled={true}>
+                      Select one
+                    </option>
+                    {theatres.map((theatre) => {
+                      return (
+                        <option value={theatre._id} key={theatre._id}>
+                          {theatre.title}
+                        </option>
+                      );
+                    })}
                   </select>
+                  {validator.message(
+                    "movie theatre",
+                    state.theatre_id,
+                    "required"
+                  )}
                 </div>
               </div>
               <div className="form-group">
