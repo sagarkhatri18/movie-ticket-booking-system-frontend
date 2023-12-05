@@ -52,9 +52,9 @@ const Booking = () => {
     </div>
   );
 
-  const getMovieTitle = (booking) => booking.movie_id.title;
+  const getMovieTitle = (booking) => booking.movie.title;
 
-  const getMovieTheatre = (booking) => booking.movie_id.theatre_id.title;
+  const getMovieTheatre = (booking) => booking.movie.theatre.title;
 
   const getSubTotal = (booking) => `$${booking.sub_total}`;
 
@@ -109,7 +109,7 @@ const Booking = () => {
             <Column field="contact" header="Contact"></Column>
             <Column body={getBookingStatus} header="Status"></Column>
             <Column body={getMovieTitle} sortable header="Movie"></Column>
-            <Column body={getMovieTheatre} sortable header="Theatre"></Column>
+            {<Column body={getMovieTheatre} sortable header="Theatre"></Column> }
             <Column field="quantity" header="Quantity"></Column>
             <Column body={getSubTotal} header="Sub Total"></Column>
             <Column body={getTax} header="Tax"></Column>

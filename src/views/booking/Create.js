@@ -71,14 +71,14 @@ const BookingCreate = () => {
   const findMovieFromId = useCallback(() => {
     findMovie(params.id)
       .then((data) => {
-        const returnData = data.data.data;
+        const returnData = data.data;
         bookedSeats();
 
         setSeat(
-          Array(returnData.theatre_id.no_of_rows)
+          Array(returnData.theatre.no_of_rows)
             .fill()
             .map((_) =>
-              Array(returnData.theatre_id.seats_in_each_row).fill(false)
+              Array(returnData.theatre.seats_in_each_row).fill(false)
             )
         );
         setMovie(returnData);
@@ -120,7 +120,7 @@ const BookingCreate = () => {
     };
     getBookedSeats(formData)
       .then((data) => {
-        setBooked(data.data.data);
+        setBooked(data.data);
       })
       .catch((error) => {
         toast.error("Error occured while fetching data");
@@ -140,8 +140,8 @@ const BookingCreate = () => {
         toast.error("At least one seat should be selected to proceed");
         return false;
       } else {
-        booking.movie_id = movie._id;
-        booking.selected_seats = selectedSeats;
+        booking.movie_id = movie.id;
+        booking.selected_seats = Array(selectedSeats).toString();
 
         addBooking(booking)
           .then((data) => {
@@ -197,7 +197,7 @@ const BookingCreate = () => {
                     </tr>
                     <tr>
                       <th>Theatre</th>
-                      <td>{movie && movie.theatre_id.title}</td>
+                      <td>{movie && movie.theatre.title}</td>
                     </tr>
                     <tr>
                       <th>Price per ticket</th>
