@@ -7,9 +7,9 @@ const SearchData = (props) => {
   return movies.map((movie) => {
     return (
       <div className="col-sm-3" key={movie._id}>
-        <div className="card">
+        <div className="card mb-4">
           <div className="card-body">
-            <h4 className="card-title">
+            <h5 className="card-title">
               <p>{movie.title} - {movie.theatre_id.title}</p>
               <span><Rating
                 stop={5}
@@ -32,7 +32,7 @@ const SearchData = (props) => {
                   "fa fa-star fa-2x high",
                 ]}
               /></span>
-            </h4>
+            </h5>
             <p className="card-text">
               <span>
                 Price: <b>{movie.price}</b>
