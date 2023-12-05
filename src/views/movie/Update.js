@@ -252,7 +252,7 @@ const Update = () => {
                     id="theatre_id"
                     name="theatre_id"
                     className="form-control"
-                    value={state.theatre_id}
+                    value={state.theatre_id._id}
                     onChange={handleChange}
                   >
                     <option value="" disabled={true}>

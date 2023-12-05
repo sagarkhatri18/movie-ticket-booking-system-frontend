@@ -27,6 +27,27 @@ export const addBooking = async (data) => {
 };
 
 // list all the bookings
-export const getMovies = async () => {
+export const getBookings = async () => {
   return await axios.get(process.env.REACT_APP_API_URL + `booking`, config);
+};
+
+// mark the booking as inactive
+export const markAsInactive = async (id) => {
+  return await axios.get(
+    process.env.REACT_APP_API_URL + `booking/inactive/${id}`,
+    config
+  );
+};
+
+// get booked seats
+export const getBookedSeats = async (data) => {
+  const formData = {
+    movie_id: data.movie_id,
+    booking_date: data.booking_date,
+  };
+  return await axios.post(
+    process.env.REACT_APP_API_URL + `booking/booked_seats`,
+    formData,
+    config
+  );
 };

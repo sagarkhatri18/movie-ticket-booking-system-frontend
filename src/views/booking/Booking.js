@@ -1,205 +1,128 @@
-import { render } from "react-dom";
-import styles from "../../scss/theater.scss";
-
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { NavLink } from "react-router-dom";
+import { getBookings, markAsInactive } from "./Service";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Rating } from "primereact/rating";
+import { Button } from "primereact/button";
+import { Tag } from "primereact/tag";
+import alertify from "alertifyjs";
+import { toast } from "react-toastify";
 
 const Booking = () => {
-  const [seat, setSeat] = useState(
-    Array(10)
-      .fill()
-      .map((_) => Array(25).fill(false))
-  );
-  const [booked, setBooked] = useState([
-    211,
-    325,
-    615,
-    ,
-    616,
-    617,
-    618,
-    1011,
-    922,
-    923,
-    924,
-  ]);
-  const [reserveSeat, setReserveSeat] = useState({});
+  const [bookings, setBookings] = useState([]);
 
-  const checkIsBooked = (row, seat) => {
-    let bookedSeat = String(row) + String(seat);
-    if (booked.includes(parseInt(bookedSeat))) return true;
-    return false;
+  const loadBookings = useCallback(() => {
+    getBookings()
+      .then((data) => {
+        setBookings(data.data);
+      })
+      .catch((error) => {
+        toast.error("Error occured while fetching data");
+      });
+  }, []);
+
+  useEffect(() => {
+    loadBookings();
+  }, [loadBookings]);
+
+  // mark the particular booking as inactive
+  const makeInactive = (id) => {
+    alertify.confirm(
+      "Mark as Inactive",
+      "Are you sure want to mark the booking as inactive?",
+      function () {
+        markAsInactive(id)
+          .then((data) => {
+            toast.success(data.data.message);
+            loadBookings();
+          })
+          .catch((error) => {
+            toast.error("Failed to mark the booking as inactive");
+          });
+      },
+      function () {}
+    );
   };
 
-  const handleSeatClick = (row, index) => {
-    console.log(row, index);
-    // Create a new array to avoid mutating the state directly
-    const newSeats = [...seat];
-    newSeats[row][index] = !newSeats[row][index];
+  const datatableHeader = (
+    <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+      <span className="text-xl text-900 font-bold">Bookings</span>
+      <Button icon="pi pi-refresh" rounded raised />
+    </div>
+  );
 
-    setSeat(newSeats);
+  const getMovieTitle = (booking) => booking.movie_id.title;
+
+  const getMovieTheatre = (booking) => booking.movie_id.theatre_id.title;
+
+  const getSubTotal = (booking) => `$${booking.sub_total}`;
+
+  const getTax = (booking) => `$${booking.tax}`;
+
+  const getTotal = (booking) => `$${booking.total}`;
+
+  const footer = `In total there are ${
+    bookings ? bookings.length : 0
+  } bookings.`;
+
+  const formatDate = (booking) => new Date(booking.created_at).toLocaleString();
+
+  const getBookingStatus = (booking) => {
+    const severity = booking.status ? "success" : "danger";
+    const statusValue = booking.status ? "ACTIVE" : "INACTIVE";
+    return <Tag value={statusValue} severity={severity} />;
+  };
+
+  const actionBodyTemplate = (booking) => {
+    return (
+      <>
+        <div className="d-inline-flex">
+          <Button
+            onClick={() => makeInactive(booking._id)}
+            type="button"
+            icon="pi pi-times"
+            className="btn btn-danger"
+            style={{ color: "white" }}
+            rounded
+          ></Button>
+        </div>
+      </>
+    );
   };
 
   return (
     <>
-      <div className="container">
-        <div className="row">
-          <ul className="showcase ">
-            <li>
-              <div className="seat"></div>
-              <small>Available</small>
-            </li>
-            <li>
-              <div className="seat selected"></div>
-              <small>Selected</small>
-            </li>
-            <li>
-              <div className="seat sold"></div>
-              <small>Sold</small>
-            </li>
-          </ul>
-        </div>
-        <div className="row">
-          <div className="screen"></div>
-          {/* 
-                  <div key={ii+1} className="seat sold"></div> */}
-
-          {seat.map((col, row) => {
-            return (
-              <div className="row" key={row}>
-                {col.map((isReserved, i) => {
-                  return (
-                    <>
-                      {checkIsBooked(row + 1, i + 1) ? (
-                        <div className="seat sold" key={i}></div>
-                      ) : (
-                        <div
-                          onClick={() => handleSeatClick(row, i)}
-                          className={`seat ${isReserved ? "selected" : ""}`}
-                          key={i}
-                        ></div>
-                      )}
-                    </>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="row mt-md-2">
-          <div className="card p-5">
-            <div className="form-group">
-              <label className="col-md-6 control-label" htmlFor="name">
-                Name
-              </label>
-              <div className="col-md-6">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder=""
-                  className="form-control input-md"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="col-md-6 control-label" htmlFor="email">
-                Email
-              </label>
-              <div className="col-md-6">
-                <input
-                  id="email"
-                  name="email"
-                  type="text"
-                  placeholder=""
-                  className="form-control input-md"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="col-md-6 control-label" htmlFor="phone">
-                Phone Number
-              </label>
-              <div className="col-md-6">
-                <input
-                  id="phone"
-                  name="phone"
-                  type="number"
-                  placeholder=""
-                  className="form-control input-md"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="col-md-6 control-label" htmlFor="quantity">
-                Quantity
-              </label>
-              <div className="col-md-6">
-                <input
-                  id="quantity"
-                  name="quantity"
-                  type="number"
-                  placeholder=""
-                  className="form-control input-md"
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label className="col-md-6 control-label" htmlFor="sub_total">
-                Sub Total
-              </label>
-              <div className="col-md-6">
-                <input
-                  id="sub_total"
-                  name="sub_total"
-                  type="number"
-                  placeholder=""
-                  className="form-control input-md"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="col-md-6 control-label" htmlFor="tax">
-                Tax
-              </label>
-              <div className="col-md-6">
-                <input
-                  id="tax"
-                  name="tax"
-                  type="number"
-                  placeholder=""
-                  className="form-control input-md"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="col-md-6 control-label" for="total">
-                Total
-              </label>
-              <div className="col-md-6">
-                <input
-                  id="total"
-                  name="total"
-                  type="number"
-                  placeholder=""
-                  className="form-control input-md"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <button className="btn btn-success text-white">Save</button>
-            </div>
-          </div>
+      <div className="row">
+        <div className="col-12">
+          <DataTable
+            value={bookings}
+            header={datatableHeader}
+            footer={footer}
+            paginator
+            rows={5}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            tableStyle={{ minWidth: "100rem" }}
+          >
+            <Column field="name" sortable header="Name"></Column>
+            <Column field="email" sortable header="Email"></Column>
+            <Column field="contact" header="Contact"></Column>
+            <Column body={getBookingStatus} header="Status"></Column>
+            <Column body={getMovieTitle} sortable header="Movie"></Column>
+            <Column body={getMovieTheatre} sortable header="Theatre"></Column>
+            <Column field="quantity" header="Quantity"></Column>
+            <Column body={getSubTotal} header="Sub Total"></Column>
+            <Column body={getTax} header="Tax"></Column>
+            <Column body={getTotal} header="Total"></Column>
+            <Column body={formatDate} header="Created At"></Column>
+            <Column
+              headerStyle={{ width: "5rem", textAlign: "center" }}
+              bodyStyle={{ textAlign: "center", overflow: "visible" }}
+              body={actionBodyTemplate}
+            />
+          </DataTable>
         </div>
       </div>
-
-      {}
     </>
   );
 };

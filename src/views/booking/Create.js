@@ -2,44 +2,27 @@ import { render } from "react-dom";
 import styles from "../../scss/theater.scss";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { findMovie } from "../movie/Service";
 import { toast } from "react-toastify";
 import Rating from "react-rating";
 import { BookingDate } from "../../helpers/Helper";
-import { addBooking } from "./Service";
+import { addBooking, getBookedSeats } from "./Service";
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
 
 const BookingCreate = () => {
   const params = useParams();
+  const navigate = useNavigate();
 
   // Validator Imports
   const validator = useRef(new SimpleReactValidator()).current;
   const [, forceUpdate] = useState();
 
-  const [seat, setSeat] = useState(
-    Array(10)
-      .fill()
-      .map((_) => Array(25).fill(false))
-  );
-  const [booked, setBooked] = useState([
-    211,
-    325,
-    615,
-    ,
-    616,
-    617,
-    618,
-    1011,
-    922,
-    923,
-    924,
-  ]);
+  const [seat, setSeat] = useState([]);
+  const [booked, setBooked] = useState([11, 45, 75, 35, 310, 1010]);
 
-  const [reserveSeat, setReserveSeat] = useState({});
   const [movie, setMovie] = useState("");
-
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [booking, setBooking] = useState({
     name: "",
@@ -47,6 +30,7 @@ const BookingCreate = () => {
     contact: "",
     quantity: 0,
     sub_total: 0,
+    status: true,
     tax: 0,
     total: 0,
     movie_id: "",
@@ -62,7 +46,7 @@ const BookingCreate = () => {
   const handleSeatClick = (row, index) => {
     // Create a new array to avoid mutating the state directly
     const newSeats = [...seat];
-    newSeats[row][index] = !newSeats[row][index];
+    newSeats[row - 1][index - 1] = !newSeats[row - 1][index - 1];
 
     setSeat(newSeats);
 
@@ -79,7 +63,7 @@ const BookingCreate = () => {
     } else {
       setSelectedSeats((oldArray) => [...oldArray, `${row}${index}`]);
     }
-
+    console.log(selectedSeats);
     calculatePrice(newSeats);
   };
 
@@ -88,6 +72,15 @@ const BookingCreate = () => {
     findMovie(params.id)
       .then((data) => {
         const returnData = data.data.data;
+        bookedSeats();
+
+        setSeat(
+          Array(returnData.theatre_id.no_of_rows)
+            .fill()
+            .map((_) =>
+              Array(returnData.theatre_id.seats_in_each_row).fill(false)
+            )
+        );
         setMovie(returnData);
       })
       .catch((error) => {
@@ -119,6 +112,21 @@ const BookingCreate = () => {
     booking.total = totalPrice;
   };
 
+  // get booked seats
+  const bookedSeats = () => {
+    const formData = {
+      movie_id: params.id,
+      booking_date: BookingDate(),
+    };
+    getBookedSeats(formData)
+      .then((data) => {
+        setBooked(data.data.data);
+      })
+      .catch((error) => {
+        toast.error("Error occured while fetching data");
+      });
+  };
+
   useEffect(() => {
     findMovieFromId();
   }, [findMovieFromId]);
@@ -137,8 +145,8 @@ const BookingCreate = () => {
 
         addBooking(booking)
           .then((data) => {
-            navigate("/booking");
             toast.success(data.data.message);
+            navigate("/booking");
           })
           .catch((error) => {
             toast.error(error.response.data);
@@ -244,10 +252,12 @@ const BookingCreate = () => {
                             <div className="seat sold" key={i + "second"}></div>
                           ) : (
                             <div
-                              onClick={() => handleSeatClick(row, i)}
+                              onClick={() => handleSeatClick(row + 1, i + 1)}
                               className={`seat ${isReserved ? "selected" : ""}`}
                               key={i + "third"}
-                            ></div>
+                            >
+                              {String(row + 1) + " - " + String(i + 1)}
+                            </div>
                           )}
                         </>
                       );
