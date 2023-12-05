@@ -2,7 +2,7 @@ import { render } from "react-dom";
 import styles from "../../scss/theater.scss";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { findMovie } from "../movie/Service";
 import { toast } from "react-toastify";
 import Rating from "react-rating";
@@ -13,16 +13,13 @@ import SimpleReactValidator from "simple-react-validator";
 
 const BookingCreate = () => {
   const params = useParams();
+  const navigate = useNavigate();
 
   // Validator Imports
   const validator = useRef(new SimpleReactValidator()).current;
   const [, forceUpdate] = useState();
 
-  const [seat, setSeat] = useState(
-    Array(10)
-      .fill()
-      .map((_) => Array(25).fill(false))
-  );
+  const [seat, setSeat] = useState([]);
   const [booked, setBooked] = useState([
     211,
     325,
@@ -47,6 +44,7 @@ const BookingCreate = () => {
     contact: "",
     quantity: 0,
     sub_total: 0,
+    status: true,
     tax: 0,
     total: 0,
     movie_id: "",
@@ -88,6 +86,12 @@ const BookingCreate = () => {
     findMovie(params.id)
       .then((data) => {
         const returnData = data.data.data;
+
+        setSeat(
+          Array(returnData.theatre_id.no_of_rows)
+            .fill()
+            .map((_) => Array(returnData.theatre_id.seats_in_each_row).fill(false))
+        );
         setMovie(returnData);
       })
       .catch((error) => {
@@ -137,8 +141,8 @@ const BookingCreate = () => {
 
         addBooking(booking)
           .then((data) => {
-            navigate("/booking");
             toast.success(data.data.message);
+            navigate("/booking");
           })
           .catch((error) => {
             toast.error(error.response.data);
