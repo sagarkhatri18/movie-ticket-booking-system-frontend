@@ -20,8 +20,8 @@ const Login = () => {
   const [, forceUpdate] = useState();
 
   const [state, setState] = useState({
-    email: "sagar@gmail.com",
-    password: "Password@123",
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
