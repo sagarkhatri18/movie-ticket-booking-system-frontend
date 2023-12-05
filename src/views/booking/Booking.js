@@ -130,8 +130,8 @@ const Booking = () => {
             header={datatableHeader}
             footer={footer}
             paginator
-            rows={5}
-            rowsPerPageOptions={[5, 10, 25, 50]}
+            rows={10}
+            rowsPerPageOptions={[10, 25, 50]}
             tableStyle={{ minWidth: "100rem" }}
           >
             <Column field="name" sortable header="Name"></Column>

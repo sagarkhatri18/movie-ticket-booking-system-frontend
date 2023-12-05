@@ -125,7 +125,7 @@ const Create = () => {
                       name="status"
                       id="status-0"
                       value="1"
-                      checked="checked"
+                      defaultChecked
                       onChange={handleChange}
                     />
                     Active
@@ -339,7 +339,7 @@ const Create = () => {
                     name="rating"
                     type="number"
                     min="1"
-                    max="10"
+                    max="5"
                     placeholder="Enter the movie rating here"
                     className="form-control input-md"
                     onChange={handleChange}

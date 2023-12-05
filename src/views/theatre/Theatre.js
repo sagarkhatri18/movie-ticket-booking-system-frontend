@@ -103,8 +103,8 @@ const Theatre = () => {
             header={datatableHeader}
             footer={footer}
             paginator
-            rows={5}
-            rowsPerPageOptions={[5, 10, 25, 50]}
+            rows={10}
+            rowsPerPageOptions={[10, 25, 50]}
             tableStyle={{ minWidth: "50rem" }}
           >
             <Column field="title" header="Title"></Column>
