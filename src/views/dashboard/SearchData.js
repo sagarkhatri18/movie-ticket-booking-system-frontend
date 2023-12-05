@@ -59,7 +59,7 @@ const SearchData = (props) => {
               </span>
               <br></br>
             </p>
-            <NavLink to={`/movie/booking/${movie._id}`}>
+            <NavLink to={`/movie/booking/${movie.id}`}>
               <button className="btn btn-primary">
                 Book Now <i className="fa fa-arrow-right"></i>
               </button>

@@ -87,7 +87,7 @@ const Movie = () => {
             className="btn btn-default"
             rounded
           ></Button>
-          <NavLink to={`/movie/booking/${movie._id}`}>
+          <NavLink to={`/movie/booking/${movie.id}`}>
             <Button type="button" className="btn btn-default" icon="pi pi-folder" rounded></Button>
           </NavLink>
         </div>

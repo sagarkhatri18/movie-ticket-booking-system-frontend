@@ -30,7 +30,7 @@ const BookingTicket = (props) => {
           </tr>
           <tr>
             <th>Seats: </th>
-            <td>{bookingData.selected_seats.join(", ")}</td>
+            <td>{bookingData.selected_seats?bookingData.selected_seats:null}</td>
           </tr>
           <tr>
             <th>Total Price: </th>
@@ -44,7 +44,7 @@ const BookingTicket = (props) => {
           </tr>
           <tr>
             <th>Movie: </th>
-            <td>{bookingData.movie_id.title}</td>
+            <td>{bookingData.movie.title}</td>
           </tr>
           <tr>
             <th>Rating</th>
@@ -74,7 +74,22 @@ const BookingTicket = (props) => {
           </tr>
           <tr>
             <th>Theatre: </th>
-            <td>{bookingData.movie_id.theatre_id.title}</td>
+            <td>{bookingData.movie.theatre.title}</td>
+          </tr>
+          <tr>
+            <th>Status: </th>
+            {
+              bookingData.status ?(
+                <td>
+                  <button className="btn btn-sm btn-success text-white">BOOKED</button>
+                  </td>
+              ):(
+                <td>
+                  <button className="btn btn-sm btn-danger text-white">CANCELLED</button>
+
+                </td>
+              )
+            }
           </tr>
         </tbody>
       </table>

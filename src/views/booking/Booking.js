@@ -80,7 +80,7 @@ const Booking = () => {
   const openModal = (id) => {
     getBookingById(id)
       .then((data) => {
-        setBooking(data.data.data);
+        setBooking(data.data);
         setModalShow(true);
       })
       .catch((error) => {
@@ -102,14 +102,14 @@ const Booking = () => {
       <>
         <div className="d-inline-flex">
           <Button
-            onClick={() => makeInactive(booking._id)}
+            onClick={() => makeInactive(booking.id)}
             type="button"
             icon="pi pi-times"
             className="btn btn-default"
             rounded
           ></Button>
           <Button
-            onClick={() => openModal(booking._id)}
+            onClick={() => openModal(booking.id)}
             type="button"
             icon="pi pi-ticket"
             className="btn btn-default"
