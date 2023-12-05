@@ -1,14 +1,22 @@
 import { render } from "react-dom";
 import styles from "../../scss/theater.scss";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { findMovie } from "../movie/Service";
 import { toast } from "react-toastify";
 import Rating from "react-rating";
+import { BookingDate } from "../../helpers/Helper";
+import { addBooking } from "./Service";
+// Validator Packages
+import SimpleReactValidator from "simple-react-validator";
 
 const BookingCreate = () => {
   const params = useParams();
+
+  // Validator Imports
+  const validator = useRef(new SimpleReactValidator()).current;
+  const [, forceUpdate] = useState();
 
   const [seat, setSeat] = useState(
     Array(10)
@@ -32,19 +40,47 @@ const BookingCreate = () => {
   const [reserveSeat, setReserveSeat] = useState({});
   const [movie, setMovie] = useState("");
 
+  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [booking, setBooking] = useState({
+    name: "",
+    email: "",
+    contact: "",
+    quantity: 0,
+    sub_total: 0,
+    tax: 0,
+    total: 0,
+    movie_id: "",
+    booking_date: BookingDate(),
+    selected_seats: "",
+  });
+
   const checkIsBooked = (row, seat) => {
     let bookedSeat = String(row) + String(seat);
-    if (booked.includes(parseInt(bookedSeat))) return true;
-    return false;
+    return booked.includes(parseInt(bookedSeat));
   };
 
   const handleSeatClick = (row, index) => {
-    console.log(row, index);
     // Create a new array to avoid mutating the state directly
     const newSeats = [...seat];
     newSeats[row][index] = !newSeats[row][index];
 
     setSeat(newSeats);
+
+    // check if the seats is alredy been selected or not
+    if (selectedSeats.length > 0) {
+      let seatsArray = [...selectedSeats];
+
+      if (seatsArray.includes(`${row}${index}`)) {
+        var result = seatsArray.filter((e) => e !== `${row}${index}`);
+        setSelectedSeats(result);
+      } else {
+        setSelectedSeats((oldArray) => [...oldArray, `${row}${index}`]);
+      }
+    } else {
+      setSelectedSeats((oldArray) => [...oldArray, `${row}${index}`]);
+    }
+
+    calculatePrice(newSeats);
   };
 
   // find movie from id
@@ -59,16 +95,74 @@ const BookingCreate = () => {
       });
   }, [params.id]);
 
+  // calculate price from seat selected
+  const calculatePrice = (newSeats) => {
+    var selectedSeatCount = 0;
+    newSeats.map((seats) => {
+      seats.map((value) => {
+        if (value) {
+          selectedSeatCount++;
+        }
+      });
+    });
+
+    var pricePerSeat = movie.price;
+    var subTotalPrice = parseInt(pricePerSeat) * selectedSeatCount;
+    var taxPrice = parseFloat((0.13 * subTotalPrice).toFixed(2));
+    var totalPrice = parseFloat(
+      (parseInt(subTotalPrice) + parseFloat(taxPrice)).toFixed(2)
+    );
+
+    booking.quantity = selectedSeatCount;
+    booking.sub_total = subTotalPrice;
+    booking.tax = taxPrice;
+    booking.total = totalPrice;
+  };
+
   useEffect(() => {
     findMovieFromId();
   }, [findMovieFromId]);
+
+  // handle form submit
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (validator.allValid()) {
+      if (booking.quantity < 1) {
+        toast.error("At least one seat should be selected to proceed");
+        return false;
+      } else {
+        booking.movie_id = movie._id;
+        booking.selected_seats = selectedSeats;
+
+        addBooking(booking)
+          .then((data) => {
+            navigate("/booking");
+            toast.success(data.data.message);
+          })
+          .catch((error) => {
+            toast.error(error.response.data);
+          });
+      }
+    } else {
+      validator.showMessages();
+      forceUpdate(1);
+    }
+  };
+
+  // handle input fields onchange value
+  const handleChange = (e) => {
+    setBooking((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   return (
     <>
       <div className="row">
         <div className="card">
           <div className="col-12">
-            {/* <div className="container"> */}
             <div className="row">
               <ul className="showcase ">
                 <li>
@@ -86,7 +180,7 @@ const BookingCreate = () => {
               </ul>
             </div>
             <div className="row">
-              <div style={{ height: "190px", margin: "0" }}>
+              <div style={{ height: "230px", margin: "0" }}>
                 <table className="table table-bordered table-sm">
                   <tbody>
                     <tr>
@@ -99,11 +193,17 @@ const BookingCreate = () => {
                     </tr>
                     <tr>
                       <th>Price per ticket</th>
-                      <td>{movie && movie.currency} {movie && movie.price}</td>
+                      <td>
+                        {movie && movie.currency} {movie && movie.price}
+                      </td>
                     </tr>
                     <tr>
                       <th>Run Time</th>
                       <td>{movie && movie.play_time}</td>
+                    </tr>
+                    <tr>
+                      <th>Booking Date</th>
+                      <td>{BookingDate()}</td>
                     </tr>
                     <tr>
                       <th>Rating</th>
@@ -136,17 +236,17 @@ const BookingCreate = () => {
               </div>
               {seat.map((col, row) => {
                 return (
-                  <div className="row" key={row}>
+                  <div className="row" key={row + "first"}>
                     {col.map((isReserved, i) => {
                       return (
                         <>
                           {checkIsBooked(row + 1, i + 1) ? (
-                            <div className="seat sold" key={i}></div>
+                            <div className="seat sold" key={i + "second"}></div>
                           ) : (
                             <div
                               onClick={() => handleSeatClick(row, i)}
                               className={`seat ${isReserved ? "selected" : ""}`}
-                              key={i}
+                              key={i + "third"}
                             ></div>
                           )}
                         </>
@@ -161,115 +261,126 @@ const BookingCreate = () => {
               ></div>
             </div>
 
-            <div className="row mt-md-2">
-              <div className="form-group">
-                <label className="col-md-6 control-label" htmlFor="name">
-                  Name
-                </label>
-                <div className="col-md-6">
+            <form onSubmit={handleSubmit}>
+              <div className="row">
+                <div className="col">
+                  <label className="col-md-6 control-label" htmlFor="name">
+                    Name
+                  </label>
                   <input
                     id="name"
                     name="name"
                     type="text"
-                    placeholder=""
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
                     className="form-control input-md"
                   />
+                  {validator.message("name", booking.name, "required")}
                 </div>
-              </div>
-
-              <div className="form-group">
-                <label className="col-md-6 control-label" htmlFor="email">
-                  Email
-                </label>
-                <div className="col-md-6">
+                <div className="col">
+                  <label className="col-md-6 control-label" htmlFor="email">
+                    Email
+                  </label>
                   <input
                     id="email"
                     name="email"
-                    type="text"
-                    placeholder=""
+                    type="email"
+                    onChange={handleChange}
+                    placeholder="Enter your email address"
                     className="form-control input-md"
                   />
+                  {validator.message(
+                    "email address",
+                    booking.email,
+                    "required"
+                  )}
                 </div>
-              </div>
-
-              <div className="form-group">
-                <label className="col-md-6 control-label" htmlFor="phone">
-                  Phone Number
-                </label>
-                <div className="col-md-6">
+                <div className="col">
+                  <label className="col-md-6 control-label" htmlFor="contact">
+                    Contact Number
+                  </label>
                   <input
-                    id="phone"
-                    name="phone"
+                    id="contact"
+                    name="contact"
                     type="number"
-                    placeholder=""
+                    onChange={handleChange}
+                    placeholder="Enter your contact number"
                     className="form-control input-md"
                   />
+                  {validator.message("contact", booking.contact, "required")}
                 </div>
               </div>
-
-              <div className="form-group">
-                <label className="col-md-6 control-label" htmlFor="quantity">
-                  Quantity
-                </label>
-                <div className="col-md-6">
+              <div className="row">
+                <div className="col-6">
+                  <label className="control-label" htmlFor="quantity">
+                    Quantity
+                  </label>
                   <input
                     id="quantity"
+                    disabled={true}
+                    value={booking.quantity}
                     name="quantity"
                     type="number"
                     placeholder=""
                     className="form-control input-md"
                   />
                 </div>
-              </div>
-              <div className="form-group">
-                <label className="col-md-6 control-label" htmlFor="sub_total">
-                  Sub Total
-                </label>
-                <div className="col-md-6">
+                <div className="col-6"></div>
+                <div className="col-6">
+                  <label className="control-label" htmlFor="sub_total">
+                    Sub Total
+                  </label>
                   <input
+                    disabled={true}
                     id="sub_total"
+                    value={booking.sub_total}
                     name="sub_total"
-                    type="number"
+                    type="text"
                     placeholder=""
                     className="form-control input-md"
                   />
                 </div>
-              </div>
+                <div className="col-6"></div>
 
-              <div className="form-group">
-                <label className="col-md-6 control-label" htmlFor="tax">
-                  Tax
-                </label>
-                <div className="col-md-6">
+                <div className="col-6">
+                  <label className="control-label" htmlFor="tax">
+                    Tax (13% HST)
+                  </label>
                   <input
                     id="tax"
+                    disabled={true}
                     name="tax"
-                    type="number"
+                    a
+                    value={booking.tax}
+                    type="text"
                     placeholder=""
                     className="form-control input-md"
                   />
                 </div>
-              </div>
+                <div className="col-6"></div>
 
-              <div className="form-group">
-                <label className="col-md-6 control-label" htmlFor="total">
-                  Total
-                </label>
-                <div className="col-md-6">
+                <div className="col-6">
+                  <label className="control-label" htmlFor="total">
+                    Total
+                  </label>
                   <input
                     id="total"
+                    disabled={true}
                     name="total"
-                    type="number"
+                    value={booking.total}
+                    type="text"
                     placeholder=""
                     className="form-control input-md"
                   />
                 </div>
-              </div>
 
-              <div className="form-group">
-                <button className="btn btn-success text-white">Save</button>
+                <div className="form-group">
+                  <button className="btn btn-success text-white" type="submit">
+                    Proceed to Checkout <i className="fa fa-credit-card"></i>
+                  </button>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
