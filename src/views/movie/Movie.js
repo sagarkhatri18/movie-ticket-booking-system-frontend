@@ -70,7 +70,6 @@ const Movie = () => {
   };
 
   const actionBodyTemplate = (movie) => {
-    console.log(movie)
     return (
       <>
         <div className="d-inline-flex">

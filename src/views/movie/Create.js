@@ -67,12 +67,12 @@ const Create = () => {
     getActiveTheatres()
       .then((data) => {
         const apiResponse = data.data;
-        setTheatres(apiResponse);
+        setTheatres(data.data);
       })
       .catch((error) => {
         toast.error("Error occured while fetching data");
       });
-  });
+  },[setTheatres]);
 
   useEffect(() => {
     loadTheatres();
@@ -233,7 +233,7 @@ const Create = () => {
                     </option>
                     {theatres.map((theatre) => {
                       return (
-                        <option value={theatre._id} key={theatre._id}>
+                        <option value={theatre.id} key={theatre.id}>
                           {theatre.title}
                         </option>
                       );

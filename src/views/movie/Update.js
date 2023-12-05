@@ -99,6 +99,7 @@ const Update = () => {
     findMovie(params.id)
       .then((data) => {
         const returnData = data.data;
+        loadTheatres();
         setState(returnData);
       })
       .catch((error) => {
@@ -258,8 +259,9 @@ const Update = () => {
                       Select one
                     </option>
                     {theatres.map((theatre) => {
+                      console.log(theatre)
                       return (
-                        <option value={theatre._id} key={theatre._id}>
+                        <option value={theatre.id} key={theatre.id}>
                           {theatre.title}
                         </option>
                       );
