@@ -51,3 +51,11 @@ export const getBookedSeats = async (data) => {
     config
   );
 };
+
+// get particular booking detail
+export const getBookingById = async (id) => {
+  return await axios.get(
+    process.env.REACT_APP_API_URL + `booking/${id}`,
+    config
+  );
+};

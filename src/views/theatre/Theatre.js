@@ -74,7 +74,7 @@ const Theatre = () => {
           </NavLink>
           <Button
             onClick={() => deleteTheatre(theatre.id)}
-            type="button"
+            type="button"s
             icon="pi pi-trash"
             className="btn btn-danger"
             style={{ color: "white" }}

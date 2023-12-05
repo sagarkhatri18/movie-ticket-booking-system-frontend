@@ -7,7 +7,7 @@ import { Rating } from "primereact/rating";
 import { Button } from "primereact/button";
 import { Tag } from "primereact/tag";
 import alertify from "alertifyjs";
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify";
 
 const Movie = () => {
   const [movies, setMovies] = useState([]);
@@ -69,6 +69,10 @@ const Movie = () => {
     return <Tag value={statusValue} severity={severity} />;
   };
 
+  const getMovieTheatre = (movie) => movie.theatre_id.title;
+
+  const getMoviePrice = movie => `$${movie.price}`;
+
   const actionBodyTemplate = (movie) => {
     return (
       <>
@@ -80,10 +84,12 @@ const Movie = () => {
             onClick={() => deleteMovie(movie.id)}
             type="button"
             icon="pi pi-trash"
-            className="btn btn-danger"
-            style={{ color: "white" }}
+            className="btn btn-default"
             rounded
           ></Button>
+          <NavLink to={`/movie/booking/${movie._id}`}>
+            <Button type="button" className="btn btn-default" icon="pi pi-folder" rounded></Button>
+          </NavLink>
         </div>
       </>
     );
@@ -101,6 +107,7 @@ const Movie = () => {
         </div>
         <div className="col-12">
           <DataTable
+            size="small"
             value={movies}
             header={datatableHeader}
             footer={footer}
@@ -109,13 +116,14 @@ const Movie = () => {
             rowsPerPageOptions={[5, 10, 25, 50]}
             tableStyle={{ minWidth: "50rem" }}
           >
-            <Column field="title" header="Title"></Column>
+            <Column field="title" sortable header="Title"></Column>
+            <Column body={getMovieTheatre} header="Theatre"></Column>
             <Column body={getMovieStatus} header="Status"></Column>
-            <Column field="currency" header="Currency"></Column>
-            <Column field="price" header="Price"></Column>
+            <Column field="currency" sortable header="Currency"></Column>
+            <Column body={getMoviePrice} header="Price"></Column>
             <Column body={movieRating} header="Rating"></Column>
-            <Column field="genre" header="Genre"></Column>
-            <Column field="release_year" header="Release Year"></Column>
+            <Column field="genre" sortable header="Genre"></Column>
+            <Column field="release_year" sortable header="Release Year"></Column>
             <Column body={formatDate} header="Created At"></Column>
             <Column
               headerStyle={{ width: "5rem", textAlign: "center" }}
