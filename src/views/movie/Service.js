@@ -29,6 +29,11 @@ export const getMovies = async () => {
   return await axios.get(process.env.REACT_APP_API_URL + `movie`, config);
 };
 
+// list all the active movies
+export const getActiveMovies = async () => {
+  return await axios.get(process.env.REACT_APP_API_URL + `movie/active/lists`, config);
+};
+
 // update the movie
 export const updateMovie = async (id, data) => {
   const formData = {

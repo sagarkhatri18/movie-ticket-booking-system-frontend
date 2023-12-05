@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { NavLink } from "react-router-dom";
-import { getBookings, markAsInactive } from "./Service";
+import { getBookings, markAsInactive, getBookingById } from "./Service";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Rating } from "primereact/rating";
 import { Button } from "primereact/button";
 import { Tag } from "primereact/tag";
 import alertify from "alertifyjs";
 import { toast } from "react-toastify";
+import BookingTicket from "./BookingTicket";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
 
 const Booking = () => {
   const [bookings, setBookings] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
+  const [booking, setBooking] = useState(null);
 
   const loadBookings = useCallback(() => {
     getBookings()
@@ -74,6 +77,26 @@ const Booking = () => {
     return <Tag value={statusValue} severity={severity} />;
   };
 
+  const openModal = (id) => {
+    getBookingById(id)
+      .then((data) => {
+        setBooking(data.data.data);
+        setModalShow(true);
+      })
+      .catch((error) => {
+        toast.error("Failed to mark the booking as inactive");
+      });
+  };
+
+  // close modal for uploaded files list
+  const closeModal = () => setModalShow(false);
+
+  const closeBtn = (
+    <button className="close" onClick={closeModal}>
+      &times;
+    </button>
+  );
+
   const actionBodyTemplate = (booking) => {
     return (
       <>
@@ -82,8 +105,14 @@ const Booking = () => {
             onClick={() => makeInactive(booking._id)}
             type="button"
             icon="pi pi-times"
-            className="btn btn-danger"
-            style={{ color: "white" }}
+            className="btn btn-default"
+            rounded
+          ></Button>
+          <Button
+            onClick={() => openModal(booking._id)}
+            type="button"
+            icon="pi pi-ticket"
+            className="btn btn-default"
             rounded
           ></Button>
         </div>
@@ -96,6 +125,7 @@ const Booking = () => {
       <div className="row">
         <div className="col-12">
           <DataTable
+            size="small"
             value={bookings}
             header={datatableHeader}
             footer={footer}
@@ -108,9 +138,9 @@ const Booking = () => {
             <Column field="email" sortable header="Email"></Column>
             <Column field="contact" header="Contact"></Column>
             <Column body={getBookingStatus} header="Status"></Column>
-            <Column body={getMovieTitle} sortable header="Movie"></Column>
-            <Column body={getMovieTheatre} sortable header="Theatre"></Column>
-            <Column field="quantity" header="Quantity"></Column>
+            <Column body={getMovieTitle} header="Movie"></Column>
+            <Column body={getMovieTheatre} header="Theatre"></Column>
+            <Column field="quantity" sortable header="Quantity"></Column>
             <Column body={getSubTotal} header="Sub Total"></Column>
             <Column body={getTax} header="Tax"></Column>
             <Column body={getTotal} header="Total"></Column>
@@ -122,6 +152,14 @@ const Booking = () => {
             />
           </DataTable>
         </div>
+        <Modal isOpen={modalShow} toggle={closeModal}>
+          <ModalHeader toggle={closeModal} close={closeBtn}>
+            Ticket
+          </ModalHeader>
+          <ModalBody>
+            <BookingTicket data={booking}/>
+          </ModalBody>
+        </Modal>
       </div>
     </>
   );

@@ -53,7 +53,9 @@ const Theatre = () => {
     </div>
   );
 
-  const footer = `In total there are ${theatres ? theatres.length : 0} theatres.`;
+  const footer = `In total there are ${
+    theatres ? theatres.length : 0
+  } theatres.`;
 
   const getTheatreStatus = (theatre) => {
     const severity = theatre.status ? "success" : "danger";
@@ -70,14 +72,13 @@ const Theatre = () => {
       <>
         <div className="d-inline-flex">
           <NavLink to={`/theatre/update/${theatre._id}`}>
-            <Button type="button" icon="pi pi-pencil" rounded></Button>
+            <Button type="button" className="btn btn-default" icon="pi pi-pencil" rounded></Button>
           </NavLink>
           <Button
             onClick={() => deleteTheatre(theatre._id)}
             type="button"
             icon="pi pi-trash"
-            className="btn btn-danger"
-            style={{ color: "white" }}
+            className="btn btn-default"
             rounded
           ></Button>
         </div>
@@ -97,6 +98,7 @@ const Theatre = () => {
         </div>
         <div className="col-12">
           <DataTable
+            size="small"
             value={theatres}
             header={datatableHeader}
             footer={footer}
@@ -109,7 +111,10 @@ const Theatre = () => {
             <Column body={getTheatreStatus} header="Status"></Column>
             <Column field="seat_capacity" header="Seat Capacity"></Column>
             <Column field="no_of_rows" header="Number of Rows"></Column>
-            <Column field="seats_in_each_row" header="Seats in each row"></Column>
+            <Column
+              field="seats_in_each_row"
+              header="Seats in each row"
+            ></Column>
             <Column body={formatDate} header="Created At"></Column>
             <Column
               headerStyle={{ width: "5rem", textAlign: "center" }}
