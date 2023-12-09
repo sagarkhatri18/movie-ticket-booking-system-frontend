@@ -72,6 +72,9 @@ const BookingCreate = () => {
     findMovie(params.id)
       .then((data) => {
         const returnData = data.data.data;
+
+        if(!returnData.status)
+          navigate("/dashboard")
         bookedSeats();
 
         setSeat(
